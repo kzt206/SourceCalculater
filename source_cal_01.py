@@ -2,10 +2,10 @@ import numpy as np
 
 # 計算回数と最大値の設定
 numCal = 0
-maxCal = 1
+maxCal = 5
 
 # 計算グリッドの設定
-grid = np.array([0.1,0.1,0.,0.01])
+grid = np.array([0.1,0.1,0.01,0.01])
 dx = 0.1
 dy = 0.1
 dz = 0.
@@ -68,14 +68,25 @@ while numCal < maxCal:
     Gt = G.transpose()
     print("Gt:")
     print(Gt)
+    GtG = np.dot(Gt,G)
+    print("GtG:")
+    print(GtG)
+
 
     # (GtG)-1　を求める
+    invGtG = np.linalg.inv(GtG)
+    print("invGtG")
+    print(invGtG)
 
     # dm = (GtG)-1 Gt Ddを求める
-
+    dm = np.dot(invGtG,(np.dot(Gt,dd)))
+    print("dm:")
+    print(dm)
 
     # dmを使って震源の位置と時刻の値を更新する
-
+    mi = mi+dm
+    print("mi:")
+    print(mi)
 
     # dmの絶対値はゼロに近い？　ー＞　おわり
 
