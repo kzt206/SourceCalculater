@@ -2,10 +2,10 @@ import numpy as np
 
 # 計算回数と最大値の設定
 numCal = 0
-maxCal = 5
+maxCal = 10
 
 # 計算グリッドの設定
-grid = np.array([0.1,0.1,0.01,0.01])
+grid = np.array([0.01,0.01,0.01,0.01])
 dx = 0.1
 dy = 0.1
 dz = 0.
@@ -49,12 +49,12 @@ while numCal < maxCal:
     # print("G:")
     # print(G[:,0])
 
-    print("j:")
+    # print("j:")
     for j in range(4):
-        print(j)
+        # print(j)
         grid_tmp = np.zeros(4)
         grid_tmp[j] = grid[j]
-        print(grid_tmp)
+        # print(grid_tmp)
         mi_tmp = mi + grid_tmp
         di_tmp = np.sqrt(np.square(xs-mi_tmp[0]) + np.square(ys-mi_tmp[1]) + np.square(zs-mi_tmp[2])) /V + mi_tmp[3]
         if grid[j] != 0:
@@ -89,5 +89,8 @@ while numCal < maxCal:
     print(mi)
 
     # dmの絶対値はゼロに近い？　ー＞　おわり
+    if np.max(dm) < 1.e-5:
+        print("Calculation end")
+        break
 
     numCal += 1
