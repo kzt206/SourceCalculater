@@ -28,7 +28,7 @@ dd = np.zeros(numPoints)
 mi = np.array([-10,10,20,0]) # set a temporal initial source 
 
 #地震波速度
-V = 5 #km/s
+V = 4.8 #km/s
 
 # 更新回数が設定回数を上回った？
 while numCal < maxCal:
@@ -89,7 +89,7 @@ while numCal < maxCal:
     print(mi)
 
     # dmの絶対値はゼロに近い？　ー＞　おわり
-    if np.max(dm) < 1.e-5:
+    if np.max(dm) < 1.e-6:
         print("Calculation end")
         break
 
