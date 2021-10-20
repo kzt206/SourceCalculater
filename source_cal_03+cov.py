@@ -5,24 +5,25 @@ numCal = 0
 maxCal = 10
 
 # 計算グリッドの設定
-numUNKOWN = 4 #未知数の数（x,y,z,t)
-grid = np.array([0.01,0.01,0.01,0.01])
+numUNKOWN = 5 #未知数の数（x,y,z,t,v)
+grid = np.array([0.01,0.01,0.01,0.01,0.01])
 dx = 0.1
 dy = 0.1
 dz = 0.1
 dt = 0.01
+dv = 0.01
 
 # 地震計の位置と観測された地震波の到達時間の設定
-# numPoints = 10
-numPoints = 5
-# xs = np.array([-12,-45,-44,20,35, -1,  5,-11, 42, 23])
-# ys = np.array([ 50, 16, 10,11, 9,-11,-19,-25,-27,-39])
-# zs = np.zeros(numPoints)
-# ts = np.array([10.477,9.759,9.243,4.984,7.499,2.980,4.409,5.817,10.184,9.274])
-xs = np.array([ -1,  5,-11, 42, 23])
-ys = np.array([-11,-19,-25,-27,-39])
+numPoints = 10
+xs = np.array([-12,-45,-44,20,35, -1,  5,-11, 42, 23])
+ys = np.array([ 50, 16, 10,11, 9,-11,-19,-25,-27,-39])
 zs = np.zeros(numPoints)
-ts = np.array([2.980,4.409,5.817,10.184,9.274])
+ts = np.array([10.477,9.759,9.243,4.984,7.499,2.980,4.409,5.817,10.184,9.274])
+# numPoints = 5
+# xs = np.array([ -1,  5,-11, 42, 23])
+# ys = np.array([-11,-19,-25,-27,-39])
+# zs = np.zeros(numPoints)
+# ts = np.array([2.980,4.409,5.817,10.184,9.274])
 
 
 di = np.zeros(numPoints)
@@ -30,18 +31,18 @@ dd = np.zeros(numPoints)
 
 # print(g)
 
-# 震源の位置と時刻の初期値を設定
-mi = np.array([-10,10,20,0]) # set a temporal initial source 
+# 震源の位置と時刻と地震は速度の初期値を設定(x,y,z,t,v)
+mi = np.array([-10,10,20,0,4.8]) # set a temporal initial source 
 
-#地震波速度
-V = 4.8 #km/s
+#初期推定値の地震波速度
+# V = 4.8 #km/s
 
 # 更新回数が設定回数を上回った？
 while numCal < maxCal:
     print("\nnumCal: " + str(numCal) )
-    G = np.zeros((numPoints,4))
+    G = np.zeros((numPoints,numUNKOWN))
     # 予測される地震波の到達時刻の計算
-    di = np.sqrt(np.square(xs-mi[0]) + np.square(ys-mi[1]) + np.square(zs-mi[2])) /V + mi[3]
+    di = np.sqrt(np.square(xs-mi[0]) + np.square(ys-mi[1]) + np.square(zs-mi[2])) /mi[4] + mi[3]
     print("di")
     print(di)
 
@@ -58,13 +59,13 @@ while numCal < maxCal:
     # print(G[:,0])
 
     # print("j:")
-    for j in range(4):
+    for j in range(numUNKOWN):
         # print(j)
-        grid_tmp = np.zeros(4)
+        grid_tmp = np.zeros(numUNKOWN)
         grid_tmp[j] = grid[j]
         # print(grid_tmp)
         mi_tmp = mi + grid_tmp
-        di_tmp = np.sqrt(np.square(xs-mi_tmp[0]) + np.square(ys-mi_tmp[1]) + np.square(zs-mi_tmp[2])) /V + mi_tmp[3]
+        di_tmp = np.sqrt(np.square(xs-mi_tmp[0]) + np.square(ys-mi_tmp[1]) + np.square(zs-mi_tmp[2])) /mi_tmp[4] + mi_tmp[3]
         if grid[j] != 0:
             G[:,j] = (di_tmp - di) / grid[j]
         else:
